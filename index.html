@@ -268,7 +268,41 @@ const favorites=new Set(JSON.parse(localStorage.getItem('stockgift_favorites_v3'
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function category(gift){const s=String(gift||'');if(/禮券|商品卡|提貨券|購物金|即享券|超商卡|儲值卡|折價券|7-11|全聯|統一超商/.test(s))return 'voucher';if(/餅|食品|米|麵|茶|咖啡|水|飲料|糖|油|鹽|醬|罐頭|魚|肉|果|醋|健康飲|保健/.test(s))return 'food';if(/袋|包|收納|提袋|購物袋|背包/.test(s))return 'bag';if(/洗|潔|皂|乳液|沐浴|牙|面膜|保養|修容|護手|衛生紙|濕紙巾/.test(s))return 'clean';if(/杯|碗|盤|筷|鍋|壺|保溫|餐|調料|杯墊|毛巾|傘|枕|居家|居家|燈/.test(s))return 'home';return 'other'}
 const emojiByType={voucher:'🎫',food:'🍪',home:'🍽️',clean:'🧼',bag:'👜',other:'🎁'};
-function getPhoto(r){return r['圖']==='有圖'&&/^https:\/\//.test(r['2026贈品圖片網址_有圖示']||'')?r['2026贈品圖片網址_有圖示']:''}
+// V4.6 第二照片來源：只使用已驗證的 StockBox 照片，不猜測網址或贈品年份。
+// 對於尚未取得 stockbox_photos.json 的離線使用者，內建 2880 已核對的備援資料。
+let stockboxPhotos={
+ "2880":{gift:"咖波聯名限定雙盤組",url:"https://s3.ap-northeast-1.amazonaws.com/img.stockbox.com.tw/4346/01KQ4A35NBSGSS93MZTSK992WE.jpg",source:"https://www.stockbox.com.tw/stocks/2880"}
+};
+function normalizedGiftName(v){
+ return String(v||"").normalize("NFKC").replace(/[\s\u3000\-—–·、,，.。()\[\]（）]/g,"").toLowerCase();
+}
+function getStockboxPhoto(r){
+ const record=stockboxPhotos[String(r["代號"]||"")];
+ if(!record||!record.gift||!record.url)return "";
+ if(normalizedGiftName(record.gift)!==normalizedGiftName(r["紀念品"]))return "";
+ try{
+  const url=new URL(record.url);
+  return url.protocol==="https:"&&["s3.ap-northeast-1.amazonaws.com","img.stockbox.com.tw"].includes(url.hostname)?url.href:"";
+ }catch{return ""}
+}
+function getPhoto(r){
+ const primary=r["圖"]==="有圖"?r["2026贈品圖片網址_有圖示"]:"";
+ return /^https:\/\//.test(primary||"")?primary:getStockboxPhoto(r);
+}
+// 可於 GitHub Pages 更新 JSON，無須重寫 765 筆 CSV。
+// 載入失敗時仍使用 CSV、內建資料與分類圖示，並避免顯示錯誤照片。
+async function loadStockboxPhotos(){
+ if(location.protocol==="file:")return;
+ try{
+  const res=await fetch("./stockbox_photos.json",{cache:"no-store"});
+  if(!res.ok)throw new Error("HTTP "+res.status);
+  const data=await res.json();
+  if(!data||typeof data.photos!=="object")return;
+  stockboxPhotos={...stockboxPhotos,...data.photos};
+  updateCounts();applyFilters();
+ }catch(err){console.info("StockBox 補圖清單未載入：",err.message)}
+}
+
 // V4.4：只在沒有實體照片或照片載入失敗時才顯示「Google 找圖片」。
 // 使用 hidden 屬性搭配 CSS !important，避免既有 display:inline-block!important 讓連結誤顯示。
 function media(r,small=false){
@@ -362,7 +396,7 @@ refreshStatsBrief();
 $('search').addEventListener('input',applyFilters);$('category').addEventListener('change',applyFilters);$('sort').addEventListener('change',applyFilters);$('onlyPhotos').onclick=()=>{onlyPhotos=!onlyPhotos;applyFilters()};$('onlyFavorite').onclick=()=>{onlyFavorite=!onlyFavorite;applyFilters()};$('reset').onclick=()=>{$('search').value='';$('category').value='all';$('sort').value='original';onlyPhotos=false;onlyFavorite=false;applyFilters()};$('gridBtn').onclick=()=>setMode('grid');$('tableBtn').onclick=()=>setMode('table');$('loadMore').onclick=loadMore;
 $('mobileAll').onclick=()=>{$('reset').click();scrollTo({top:0,behavior:'smooth'})};$('mobilePhotos').onclick=()=>{$('onlyPhotos').click();scrollTo({top:0,behavior:'smooth'})};$('mobileFav').onclick=()=>{$('onlyFavorite').click();scrollTo({top:0,behavior:'smooth'})};$('mobileTop').onclick=()=>scrollTo({top:0,behavior:'smooth'});
 $('exportBtn').onclick=()=>{const keys=FIELDS;const q=v=>{const s=String(v??'');return /[",\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s};const csv='\ufeff'+[keys,...filtered.map(r=>keys.map(k=>r[k]||''))].map(row=>row.map(q).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='stockgift_2026_filtered.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500)};
-applyFilters();loadData();
+applyFilters();loadData();loadStockboxPhotos();
 // 在 HTTPS / localhost 啟用 Service Worker；file:// 無法註冊。
 if('serviceWorker' in navigator&&['https:','http:'].includes(location.protocol))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.warn));
 </script></body></html>
