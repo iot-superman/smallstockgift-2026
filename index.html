@@ -54,6 +54,8 @@ a{color:#81dbf1}a:hover{color:#b3f0ff}
 .restored-label{color:#a7b9cd;font-size:clamp(.85rem,1.5vw,1.12rem);margin-top:3px;line-height:1.35}
 .restored-hint{font-size:.75rem;color:#bed5e4}
 @media(max-width:575px){.hero{padding:17px 0 22px!important}.restored-subtitle{margin-bottom:16px}.restored-stat{min-height:103px;padding:12px 14px!important;border-radius:18px!important}.restored-number{font-size:1.9rem}.restored-label{font-size:.86rem}}
+/* V3.4 Google 圖片搜尋按鈕：確保手機雙欄也可點選 */
+.google-image-link{font-size:.82rem;white-space:normal;text-align:center;min-height:33px;display:inline-flex;align-items:center;justify-content:center}
 </style></head><body>
 <nav class="navbar navbar-dark"><div class="container"><a class="navbar-brand d-flex align-items-center gap-2 fw-bold mb-0" href="./index.html"><span class="brand-mark">🎁</span><span>小股塔-2026</span></a><span class="badge text-bg-light">Bootstrap 5 · PWA</span></div></nav>
 <!-- V3.3：恢復原版四格統計卡，手機 2 欄、桌面 4 欄 -->
@@ -90,24 +92,31 @@ const emojiByType={voucher:'🎫',food:'🍪',home:'🍽️',clean:'🧼',bag:'�
 function getPhoto(r){return r['圖']==='有圖'&&/^https:\/\//.test(r['2026贈品圖片網址_有圖示']||'')?r['2026贈品圖片網址_有圖示']:''}
 function media(r,small=false){const emoji=emojiByType[category(r['紀念品'])];const url=getPhoto(r);const id=escapeHtml(r['代號']);if(small)return `<div class="list-emoji" data-id="${id}">${emoji}</div>${url?`<img class="list-photo" src="${escapeHtml(url)}" loading="lazy" referrerpolicy="no-referrer" onload="this.previousElementSibling.hidden=true" onerror="this.remove()" alt="${escapeHtml(r['公司'])} 實物照片">`:''}`;return `<div class="gift-image"><span class="gift-emoji" aria-hidden="true">${emoji}</span>${url?`<img src="${escapeHtml(url)}" loading="lazy" referrerpolicy="no-referrer" onload="this.previousElementSibling.hidden=true" onerror="this.remove()" alt="${escapeHtml(r['公司'])} ${escapeHtml(r['紀念品'])} 實物照片">`:''}</div>`}
 // 照片失敗不顯示「待補」，保留原分類大圖示。
-function makeCard(r){const id=escapeHtml(r['代號']),saved=favorites.has(r['代號']);return `<div class="col"><article class="gift-card">${media(r)}<div class="gift-body"><div class="d-flex align-items-center justify-content-between gap-1 mb-2"><span class="code-pill">${id}</span><button type="button" data-favorite="${id}" class="star ${saved?'active':''}" aria-label="切換收藏 ${id}">${saved?'★':'☆'}</button></div><div class="company text-truncate" title="${escapeHtml(r['公司'])}">${escapeHtml(r['公司'])}</div><div class="gift-name mt-1">${escapeHtml(r['紀念品'])}</div><div class="meta mt-2">開會 ${escapeHtml(r['開會日期']||'—')} · 買進 ${escapeHtml(r['最後買進日']||'—')}</div><div class="d-flex flex-wrap gap-1 mt-2"><span class="badge text-bg-light border">零股寄單：${escapeHtml(r['零股寄單']||'未載明')}</span>${getPhoto(r)?'<span class="badge tag-img">有照片連結</span>':''}</div></div></article></div>`}
-function makeTableRow(r){const id=escapeHtml(r['代號']);return `<tr><td><div class="d-flex align-items-center">${media(r,true)}</div></td><td><b>${id}</b><div>${escapeHtml(r['公司'])}</div></td><td>${escapeHtml(r['紀念品'])}</td><td>${escapeHtml(r['開會日期'])}</td><td>${escapeHtml(r['最後買進日'])}</td><td>${escapeHtml(r['零股寄單'])}</td><td><button data-favorite="${id}" class="star ${favorites.has(r['代號'])?'active':''}">${favorites.has(r['代號'])?'★':'☆'}</button></td></tr>`}
+// V3.4：開啟 Google 圖片搜尋，查詢包含年份、股號、公司及贈品。
+function googleImageUrl(r){
+  const query=['2026',r['代號'],r['公司'],'股東會紀念品',r['紀念品']].filter(Boolean).join(' ');
+  return 'https://www.google.com/search?tbm=isch&q='+encodeURIComponent(query);
+}
+function makeCard(r){const id=escapeHtml(r['代號']),saved=favorites.has(r['代號']);return `<div class="col"><article class="gift-card">${media(r)}<div class="gift-body"><div class="d-flex align-items-center justify-content-between gap-1 mb-2"><span class="code-pill">${id}</span><button type="button" data-favorite="${id}" class="star ${saved?'active':''}" aria-label="切換收藏 ${id}">${saved?'★':'☆'}</button></div><div class="company text-truncate" title="${escapeHtml(r['公司'])}">${escapeHtml(r['公司'])}</div><div class="gift-name mt-1">${escapeHtml(r['紀念品'])}</div><div class="meta mt-2">開會 ${escapeHtml(r['開會日期']||'—')} · 買進 ${escapeHtml(r['最後買進日']||'—')}</div><div class="d-flex flex-wrap gap-1 mt-2"><span class="badge text-bg-light border">零股寄單：${escapeHtml(r['零股寄單']||'未載明')}</span>${getPhoto(r)?'<span class="badge tag-img">有照片連結</span>':''}</div><div class="mt-3"><a class="btn btn-sm btn-outline-primary google-image-link" href="${escapeHtml(googleImageUrl(r))}" target="_blank" rel="noopener noreferrer" aria-label="Google 搜尋 ${id} 贈品圖片">Google 找圖片 ↗</a></div></div></article></div>`}
+function makeTableRow(r){const id=escapeHtml(r['代號']);return `<tr><td><div class="d-flex align-items-center">${media(r,true)}</div></td><td><b>${id}</b><div>${escapeHtml(r['公司'])}</div></td><td>${escapeHtml(r['紀念品'])}<div class="mt-1"><a class="google-image-link" href="${escapeHtml(googleImageUrl(r))}" target="_blank" rel="noopener noreferrer">Google 找圖片 ↗</a></div></td><td>${escapeHtml(r['開會日期'])}</td><td>${escapeHtml(r['最後買進日'])}</td><td>${escapeHtml(r['零股寄單'])}</td><td><button data-favorite="${id}" class="star ${favorites.has(r['代號'])?'active':''}">${favorites.has(r['代號'])?'★':'☆'}</button></td></tr>`}
 function applyFilters(){const q=$('search').value.trim().toLowerCase(),cat=$('category').value,sort=$('sort').value;filtered=records.filter(r=>(!q||[r['代號'],r['公司'],r['紀念品'],r['股代'],r['開會地點']].join(' ').toLowerCase().includes(q))&&(cat==='all'||category(r['紀念品'])===cat)&&(!onlyPhotos||!!getPhoto(r))&&(!onlyFavorite||favorites.has(r['代號'])));if(sort==='code')filtered.sort((a,b)=>a['代號'].localeCompare(b['代號'],'zh-Hant',{numeric:true}));if(sort==='company')filtered.sort((a,b)=>a['公司'].localeCompare(b['公司'],'zh-Hant'));if(sort==='date')filtered.sort((a,b)=>(a['開會日期']||'99.99').localeCompare(b['開會日期']||'99.99'));shown=0;$('cardGrid').innerHTML='';$('tableRows').innerHTML='';loadMore();$('visibleCount').textContent=filtered.length;$('currentCount').textContent=filtered.length.toLocaleString('zh-TW');$('empty').hidden=filtered.length!==0;updateControls()}
 function loadMore(){const next=filtered.slice(shown,shown+PAGE_SIZE);if(mode==='grid')$('cardGrid').insertAdjacentHTML('beforeend',next.map(makeCard).join(''));else $('tableRows').insertAdjacentHTML('beforeend',next.map(makeTableRow).join(''));shown+=next.length;$('loadMore').hidden=shown>=filtered.length;$('pageStatus').textContent=`（已顯示 ${shown} 筆）`}
 function updateControls(){$('onlyPhotos').classList.toggle('btn-selected',onlyPhotos);$('onlyFavorite').classList.toggle('btn-selected',onlyFavorite);$('gridBtn').className='btn '+(mode==='grid'?'btn-selected':'btn-outline-secondary');$('tableBtn').className='btn '+(mode==='table'?'btn-selected':'btn-outline-secondary')}
 function setMode(next){mode=next;$('cardGrid').hidden=mode!=='grid';$('tableWrap').hidden=mode!=='table';applyFilters()}
 // V3.3：統計數字隨 CSV 更新；票券總額僅統計可辨識的票券面額，不代表實際可領。
+// V3.4：恢復統計功能；僅估算名稱中可辨識的票券面額。
 function getVoucherFaceValue(gift){
   const name=String(gift||'');
   if(category(name)!=='voucher')return 0;
-  const amount=name.match(/(?:NT\\$|新臺幣|台幣|面額)?\\s*(\\d{1,4}(?:,\\d{3})?)\\s*元/);
-  return amount?Number(amount[1].replace(/,/g,'')):0;
+  const match=name.match(/(?:NT\$|新臺幣|台幣|面額)?\s*(\d{1,4}(?:,\d{3})?)\s*元/);
+  return match?Number(match[1].replace(/,/g,'')):0;
 }
 function updateCounts(){
   $('totalCount').textContent=records.length.toLocaleString('zh-TW');
   $('favoriteCount').textContent=records.filter(r=>favorites.has(r['代號'])).length.toLocaleString('zh-TW');
   const amount=records.reduce((sum,r)=>sum+getVoucherFaceValue(r['紀念品']),0);
-  $('voucherTotal').textContent=amount?('
+  $('voucherTotal').textContent=amount?'$'+amount.toLocaleString('en-US'):'—';
+}
 // 標準 CSV 解析：支援雙引號、逗號與欄位內換行。
 function parseCSV(text){const matrix=[];let row=[],v='',inQuote=false;for(let i=0;i<text.length;i++){const c=text[i];if(inQuote){if(c==='"'&&text[i+1]==='"'){v+='"';i++}else if(c==='"')inQuote=false;else v+=c}else if(c==='"')inQuote=true;else if(c===','){row.push(v);v=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(v);if(row.some(Boolean))matrix.push(row);row=[];v=''}else v+=c}if(v||row.length){row.push(v);matrix.push(row)}if(matrix[0]?.[0])matrix[0][0]=matrix[0][0].replace(/^\ufeff/,'');const headers=matrix.shift()||[];return matrix.map(cols=>Object.fromEntries(headers.map((key,i)=>[key,cols[i]||'']))).filter(r=>r['代號']&&r['公司'])}
 async function loadData(){updateCounts();if(location.protocol==='file:'){$('sourceStatus').textContent='本機模式：已使用內建 765 筆資料；若需自動更新同目錄 CSV，請使用 HTTPS 或本機網站伺服器。';return}try{const resp=await fetch('./stockgift_2026.csv?ts='+Date.now(),{cache:'no-store'});if(!resp.ok)throw Error('HTTP '+resp.status);const latest=parseCSV(await resp.text());if(latest.length<100)throw Error('CSV 筆數不足：'+latest.length);records=latest;updateCounts();applyFilters();$('sourceStatus').textContent=`已自動讀取同目錄 stockgift_2026.csv：${latest.length} 筆，其中 ${records.filter(r=>!!getPhoto(r)).length} 筆有照片連結。`;}catch(err){$('sourceStatus').textContent='CSV 讀取失敗，使用內建 '+records.length+' 筆離線備援資料。原因：'+err.message}}
