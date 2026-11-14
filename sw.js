@@ -1,5 +1,5 @@
 /* 小股塔-2026 Service Worker：同源資源優先連線，離線使用快取 */
-const CACHE='smallstockgift-2026-v3.7';
+const CACHE='smallstockgift-2026-v3.8';
 const SHELL=['./','./index.html','./stockgift_2026.csv','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install', event => {
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
