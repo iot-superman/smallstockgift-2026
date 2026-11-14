@@ -3,11 +3,47 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#112341"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="小股塔-2026"><meta name="description" content="2026 股東會贈品，765 筆資料與實物照片，適用手機桌面及離線 PWA。">
-<link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icon-192.png"><link rel="icon" href="./icon-192.png">
+<link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icon.svg"><link rel="icon" type="image/svg+xml" href="./icon.svg">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <title>小股塔-2026｜股東會贈品 PWA</title>
 <style>
 :root{--navy:#112341;--blue:#2768b4;--line:#dee6ef;--text:#14243a}html,body{min-height:100%;background:#f3f6fb;color:var(--text)}body{font-family:system-ui,-apple-system,"Noto Sans TC","PingFang TC",sans-serif;padding-bottom:85px}.navbar{background:#112341}.brand-mark{width:38px;height:38px;display:grid;place-items:center;background:#254b83;border-radius:12px;font-size:22px}.hero{background:linear-gradient(125deg,#17385f,#2862a1);color:white;border-radius:0 0 22px 22px;padding:23px 0}.stat{border:1px solid #ffffff33;border-radius:12px;padding:10px 14px;background:#ffffff13}.filter-panel{margin-top:-8px;background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:0 5px 20px #203b6310}.gift-card{height:100%;border:1px solid #e0e8f1;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 4px 16px #243d5910;transition:transform .14s}.gift-card:hover{transform:translateY(-2px)}.gift-image{height:160px;background:linear-gradient(135deg,#eff5fd,#e3edf9);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.gift-image img{width:100%;height:100%;object-fit:contain;display:block}.gift-emoji{font-size:65px;line-height:1}.gift-body{padding:13px}.gift-name{font-weight:700;min-height:47px;font-size:15px}.company{font-size:15px;font-weight:650}.code-pill{font-variant-numeric:tabular-nums;background:#e8f1fa;color:#174b83;border-radius:7px;font-weight:750;padding:4px 7px}.meta{font-size:12px;color:#677589}.tag-img{background:#e1f4e8;color:#176c39}.star{border:0;background:transparent;font-size:26px;line-height:1;color:#a7b2c0;cursor:pointer}.star.active{color:#eea413}.list-photo{height:55px;width:70px;object-fit:contain;background:#eaf1f9;border-radius:8px}.list-emoji{width:70px;height:55px;display:grid;place-items:center;font-size:30px;background:#eaf1f9;border-radius:8px}.table>:not(caption)>*>*{vertical-align:middle}.source-state{font-size:12px}.sticky-bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:20;border-top:1px solid #dce5ee;background:white;padding:8px max(12px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));box-shadow:0 -5px 15px #1b314c10}.btn-selected{background:#1d508a!important;color:white!important;border-color:#1d508a!important}@media(min-width:768px){.gift-image{height:205px}.gift-emoji{font-size:85px}.gift-body{padding:17px}.hero{padding:32px 0}}@media(max-width:575px){.gift-image{height:140px}.gift-emoji{font-size:60px}.gift-name{min-height:45px;font-size:14px}.gift-body{padding:10px}.company{font-size:13px}.hero{padding:16px 0}.stat{padding:8px 10px}.mobile-small{font-size:12px}}@media(display-mode:standalone){#installHint{display:none!important}}
+
+/* V3.2 更新：恢復小股塔原始深藍主題，保留 Bootstrap 5 RWD */
+:root{color-scheme:dark;--navy:#071426;--blue:#62d3e8;--line:#36536d;--text:#e9f2ff}
+html,body{background:#071426!important;color:#e9f2ff!important}
+.navbar{background:#081629!important;border-bottom:1px solid #29445b}
+.navbar-brand,.navbar-brand:hover{color:#f2f7ff!important}
+.brand-mark{background:#18334e}
+.hero{background:linear-gradient(115deg,#09172c,#183d51)!important;border-radius:0 0 20px 20px;border-bottom:1px solid #284961}
+.stat{background:#102a3f!important;border:1px solid #31536b!important;border-radius:16px}
+.stat .h4,.stat strong{color:#ffc76d!important}
+.filter-panel,.gift-card,.table-responsive,.bg-white{background:#102139!important;color:#e8f2ff!important;border-color:#35536c!important;box-shadow:none!important}
+.filter-panel{box-shadow:0 8px 26px #020a1680!important}
+.gift-card:hover{border-color:#65d7e8!important;transform:translateY(-2px)}
+.gift-image,.list-emoji,.list-photo{background:linear-gradient(125deg,#1d3854,#192e48)!important}
+.gift-body,.company,.gift-name,.form-label,.fw-semibold{color:#edf6ff!important}
+.gift-name{color:#ffd078!important}
+.meta,.text-secondary,.source-state,.gift-body .small{color:#a6b9cd!important}
+.code-pill{background:#294964!important;color:#def4ff!important}
+.form-control,.form-select{background-color:#0a192e!important;color:#ecf5ff!important;border:1px solid #47637d!important}
+.form-control::placeholder{color:#91a4b9!important}
+.form-control:focus,.form-select:focus{border-color:#65d7e8!important;box-shadow:0 0 0 .22rem #64d4e52e!important}
+.btn-selected,.btn-primary,.btn-outline-primary:hover{background:#60d3e9!important;color:#082338!important;border-color:#60d3e9!important}
+.btn-outline-primary{color:#79dcf0!important;border-color:#487b90!important}
+.btn-outline-secondary{color:#c6d5e4!important;border-color:#536c84!important}
+.btn-outline-warning{color:#ffd17c!important;border-color:#a8844f!important}
+.btn-outline-secondary:hover,.btn-outline-warning:hover{background:#29445d!important;color:white!important}
+.btn-light{background:#dceffc;color:#0a2744;border-color:#dceffc}
+.badge.text-bg-light{background:#294560!important;color:#c8edff!important}
+.badge.tag-img,.tag-img{background:#1b4b51!important;color:#a0f4d0!important}
+.table{--bs-table-bg:#102139;--bs-table-color:#edf4ff;--bs-table-border-color:#33506b;--bs-table-striped-bg:#182d48;--bs-table-striped-color:#edf4ff;--bs-table-hover-bg:#22435c;--bs-table-hover-color:#fff;color:#edf4ff}
+.table thead th{background:#1a354e!important;color:#edf5ff!important}
+.sticky-bottom-nav{background:#0d2036!important;border-top:1px solid #36536b!important;box-shadow:0 -5px 18px #02091270!important}
+.star{color:#c4d5e3}.star.active{color:#ffc45c}
+#cardGrid,#tableWrap{color:#edf4ff}
+a{color:#81dbf1}a:hover{color:#b3f0ff}
+
 </style></head><body>
 <nav class="navbar navbar-dark"><div class="container"><a class="navbar-brand d-flex align-items-center gap-2 fw-bold mb-0" href="./index.html"><span class="brand-mark">🎁</span><span>小股塔-2026</span></a><span class="badge text-bg-light">Bootstrap 5 · PWA</span></div></nav>
 <header class="hero"><div class="container"><div class="d-flex flex-wrap justify-content-between align-items-center gap-3"><div><h1 class="h4 fw-bold mb-1">2026 股東會紀念品查詢</h1><p class="mb-0 opacity-75 mobile-small">股票代號、公司、贈品、零股寄單與實物照片</p></div><div class="d-flex gap-2"><div class="stat"><div class="small opacity-75">總筆數</div><div class="h4 fw-bold mb-0" id="totalCount">765</div></div><div class="stat"><div class="small opacity-75">照片連結</div><div class="h4 fw-bold mb-0" id="photoCount">344</div></div></div></div></div></header>
