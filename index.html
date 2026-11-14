@@ -74,6 +74,43 @@ a{color:#81dbf1}a:hover{color:#b3f0ff}
 .gift-lightbox-title{text-align:center;font-size:clamp(.9rem,2vw,1.15rem);color:#d9eaff;padding:0 46px}
 .gift-lightbox-close{position:absolute;z-index:2;top:8px;right:10px;border:1px solid #7190a6;border-radius:50%;background:#18364f;color:#fff;width:42px;height:42px;font-size:29px;line-height:1;cursor:pointer}
 @media(max-width:575px){#giftLightbox{width:98vw;max-width:98vw;padding:8px;border-radius:14px}#giftLightboxImg{max-height:calc(96dvh - 105px)}}
+
+/* V3.8 iPhone Safari 放大圖修正：
+   dialog 不再依賴 auto height 與子元素 height:100%（Safari 可能將容器壓成細線）。
+   使用完整視窗尺寸及明確的 flex 尺寸，讓長寬比例由圖片自然維持。 */
+#giftLightbox{
+ position:fixed!important;inset:0!important;margin:0!important;
+ width:100vw!important;max-width:100vw!important;
+ height:100vh!important;height:100dvh!important;max-height:100dvh!important;
+ padding:clamp(12px,3vw,28px)!important;
+ border:0!important;border-radius:0!important;
+ background:#081727!important;box-sizing:border-box!important;
+ overflow:hidden!important;
+}
+#giftLightbox[open]{display:flex!important;align-items:center!important;justify-content:center!important}
+#giftLightbox .gift-lightbox-content{
+ display:flex!important;flex-direction:column!important;
+ align-items:center!important;justify-content:center!important;
+ width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;
+ gap:12px!important;overflow:hidden!important;
+}
+#giftLightboxImg{
+ display:block!important;position:static!important;
+ width:auto!important;height:auto!important;
+ max-width:100%!important;max-height:calc(100dvh - 130px)!important;
+ min-width:0!important;min-height:0!important;
+ object-fit:contain!important;flex:0 1 auto!important;
+ margin:0 auto!important;
+}
+#giftLightboxTitle{flex:none!important;max-height:3.5em!important;overflow:hidden!important}
+#giftLightboxClose{
+ position:fixed!important;top:max(12px,env(safe-area-inset-top))!important;
+ right:max(12px,env(safe-area-inset-right))!important;z-index:9999!important;
+}
+@media(max-width:575px){
+ #giftLightbox{padding:calc(50px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom))!important}
+ #giftLightboxImg{max-height:calc(100dvh - 175px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important}
+}
 </style></head><body>
 <nav class="navbar navbar-dark"><div class="container"><a class="navbar-brand d-flex align-items-center gap-2 fw-bold mb-0" href="./index.html"><span class="brand-mark">🎁</span><span>小股民-2026</span></a><span class="badge text-bg-light">Bootstrap 5 · PWA</span></div></nav>
 <!-- V3.3：恢復原版四格統計卡，手機 2 欄、桌面 4 欄 -->
