@@ -174,6 +174,25 @@ a{color:#81dbf1}a:hover{color:#b3f0ff}
  .mobile-stats-toggle{gap:5px!important;padding:7px 9px!important}
  .stats-toggle-summary{gap:6px!important}
 }
+
+/* V4.2：Google 找圖片置於贈品照片框右下角，無邊框純文字。
+   z-index 高於實物照，並保留點擊中央照片的放大功能。 */
+.gift-image{position:relative!important}
+.gift-image>.google-image-overlay{
+ position:absolute!important;right:10px!important;bottom:9px!important;z-index:3!important;
+ display:inline-block!important;padding:3px 5px!important;margin:0!important;
+ max-width:calc(100% - 18px)!important;border:0!important;border-radius:0!important;
+ background:transparent!important;color:#77e4f8!important;text-decoration:none!important;
+ font-size:clamp(.70rem,2.4vw,.85rem)!important;line-height:1.25!important;
+ text-shadow:0 1px 4px #061323,1px 1px 2px #061323,-1px -1px 2px #061323;
+ white-space:nowrap!important;cursor:pointer!important;touch-action:manipulation
+}
+.gift-image>.google-image-overlay:hover,.gift-image>.google-image-overlay:focus-visible{
+ color:#fff!important;text-decoration:underline!important
+}
+@media(max-width:575px){.gift-image>.google-image-overlay{
+ right:5px!important;bottom:6px!important;font-size:.72rem!important
+}}
 </style></head><body>
 <nav class="navbar navbar-dark"><div class="container"><a class="navbar-brand d-flex align-items-center gap-2 fw-bold mb-0" href="./index.html"><span class="brand-mark">🎁</span><span>小股民-2026</span></a><span class="badge text-bg-light">Bootstrap 5 · PWA</span></div></nav>
 <!-- V3.3：恢復原版四格統計卡，手機 2 欄、桌面 4 欄 -->
@@ -221,14 +240,14 @@ const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 function category(gift){const s=String(gift||'');if(/禮券|商品卡|提貨券|購物金|即享券|超商卡|儲值卡|折價券|7-11|全聯|統一超商/.test(s))return 'voucher';if(/餅|食品|米|麵|茶|咖啡|水|飲料|糖|油|鹽|醬|罐頭|魚|肉|果|醋|健康飲|保健/.test(s))return 'food';if(/袋|包|收納|提袋|購物袋|背包/.test(s))return 'bag';if(/洗|潔|皂|乳液|沐浴|牙|面膜|保養|修容|護手|衛生紙|濕紙巾/.test(s))return 'clean';if(/杯|碗|盤|筷|鍋|壺|保溫|餐|調料|杯墊|毛巾|傘|枕|居家|居家|燈/.test(s))return 'home';return 'other'}
 const emojiByType={voucher:'🎫',food:'🍪',home:'🍽️',clean:'🧼',bag:'👜',other:'🎁'};
 function getPhoto(r){return r['圖']==='有圖'&&/^https:\/\//.test(r['2026贈品圖片網址_有圖示']||'')?r['2026贈品圖片網址_有圖示']:''}
-function media(r,small=false){const emoji=emojiByType[category(r['紀念品'])];const url=getPhoto(r);const id=escapeHtml(r['代號']);if(small)return `<div class="list-emoji" data-id="${id}">${emoji}</div>${url?`<img class="list-photo" data-lightbox="1" data-gift-title="${escapeHtml(r['代號']+' '+r['公司']+'｜'+r['紀念品'])}" src="${escapeHtml(url)}" loading="lazy" referrerpolicy="no-referrer" onload="this.previousElementSibling.hidden=true" onerror="this.remove()" alt="${escapeHtml(r['公司'])} 實物照片">`:''}`;return `<div class="gift-image"><span class="gift-emoji" aria-hidden="true">${emoji}</span>${url?`<img data-lightbox="1" data-gift-title="${escapeHtml(r['代號']+' '+r['公司']+'｜'+r['紀念品'])}" src="${escapeHtml(url)}" loading="lazy" referrerpolicy="no-referrer" onload="this.previousElementSibling.hidden=true" onerror="this.remove()" alt="${escapeHtml(r['公司'])} ${escapeHtml(r['紀念品'])} 實物照片">`:''}</div>`}
+function media(r,small=false){const emoji=emojiByType[category(r['紀念品'])];const url=getPhoto(r);const id=escapeHtml(r['代號']);if(small)return `<div class="list-emoji" data-id="${id}">${emoji}</div>${url?`<img class="list-photo" data-lightbox="1" data-gift-title="${escapeHtml(r['代號']+' '+r['公司']+'｜'+r['紀念品'])}" src="${escapeHtml(url)}" loading="lazy" referrerpolicy="no-referrer" onload="this.previousElementSibling.hidden=true" onerror="this.remove()" alt="${escapeHtml(r['公司'])} 實物照片">`:''}`;return `<div class="gift-image"><span class="gift-emoji" aria-hidden="true">${emoji}</span>${url?`<img data-lightbox="1" data-gift-title="${escapeHtml(r['代號']+' '+r['公司']+'｜'+r['紀念品'])}" src="${escapeHtml(url)}" loading="lazy" referrerpolicy="no-referrer" onload="this.previousElementSibling.hidden=true" onerror="this.remove()" alt="${escapeHtml(r['公司'])} ${escapeHtml(r['紀念品'])} 實物照片">`:''}<a class="google-image-overlay" href="${escapeHtml(googleImageUrl(r))}" target="_blank" rel="noopener noreferrer" aria-label="Google 搜尋 ${id} 贈品圖片">Google 找圖片 ↗</a></div>`}
 // 照片失敗不顯示「待補」，保留原分類大圖示。
 // V3.4：開啟 Google 圖片搜尋，查詢包含年份、股號、公司及贈品。
 function googleImageUrl(r){
   const query=['2026',r['代號'],r['公司'],'股東會紀念品',r['紀念品']].filter(Boolean).join(' ');
   return 'https://www.google.com/search?tbm=isch&q='+encodeURIComponent(query);
 }
-function makeCard(r){const id=escapeHtml(r['代號']),saved=favorites.has(r['代號']);return `<div class="col"><article class="gift-card">${media(r)}<div class="gift-body"><div class="d-flex align-items-center justify-content-between gap-1 mb-2"><span class="code-pill">${id}</span><button type="button" data-favorite="${id}" class="star ${saved?'active':''}" aria-label="切換收藏 ${id}">${saved?'★':'☆'}</button></div><div class="company text-truncate" title="${escapeHtml(r['公司'])}">${escapeHtml(r['公司'])}</div><div class="gift-name mt-1">${escapeHtml(r['紀念品'])}</div><div class="meta mt-2">開會 ${escapeHtml(r['開會日期']||'—')} · 買進 ${escapeHtml(r['最後買進日']||'—')}</div><div class="d-flex flex-wrap gap-1 mt-2"><span class="badge text-bg-light border">零股寄單：${escapeHtml(r['零股寄單']||'未載明')}</span>${getPhoto(r)?'<span class="badge tag-img">有照片連結</span>':''}</div><div class="google-link-row"><a class="google-image-link" href="${escapeHtml(googleImageUrl(r))}" target="_blank" rel="noopener noreferrer" aria-label="Google 搜尋 ${id} 贈品圖片">Google 找圖片 ↗</a></div></div></article></div>`}
+function makeCard(r){const id=escapeHtml(r['代號']),saved=favorites.has(r['代號']);return `<div class="col"><article class="gift-card">${media(r)}<div class="gift-body"><div class="d-flex align-items-center justify-content-between gap-1 mb-2"><span class="code-pill">${id}</span><button type="button" data-favorite="${id}" class="star ${saved?'active':''}" aria-label="切換收藏 ${id}">${saved?'★':'☆'}</button></div><div class="company text-truncate" title="${escapeHtml(r['公司'])}">${escapeHtml(r['公司'])}</div><div class="gift-name mt-1">${escapeHtml(r['紀念品'])}</div><div class="meta mt-2">開會 ${escapeHtml(r['開會日期']||'—')} · 買進 ${escapeHtml(r['最後買進日']||'—')}</div><div class="d-flex flex-wrap gap-1 mt-2"><span class="badge text-bg-light border">零股寄單：${escapeHtml(r['零股寄單']||'未載明')}</span>${getPhoto(r)?'<span class="badge tag-img">有照片連結</span>':''}</div></div></article></div>`}
 function makeTableRow(r){const id=escapeHtml(r['代號']);return `<tr><td><div class="d-flex align-items-center">${media(r,true)}</div></td><td><b>${id}</b><div>${escapeHtml(r['公司'])}</div></td><td>${escapeHtml(r['紀念品'])}<div class="mt-1"><a class="google-image-link" href="${escapeHtml(googleImageUrl(r))}" target="_blank" rel="noopener noreferrer">Google 找圖片 ↗</a></div></td><td>${escapeHtml(r['開會日期'])}</td><td>${escapeHtml(r['最後買進日'])}</td><td>${escapeHtml(r['零股寄單'])}</td><td><button data-favorite="${id}" class="star ${favorites.has(r['代號'])?'active':''}">${favorites.has(r['代號'])?'★':'☆'}</button></td></tr>`}
 function applyFilters(){const q=$('search').value.trim().toLowerCase(),cat=$('category').value,sort=$('sort').value;filtered=records.filter(r=>(!q||[r['代號'],r['公司'],r['紀念品'],r['股代'],r['開會地點']].join(' ').toLowerCase().includes(q))&&(cat==='all'||category(r['紀念品'])===cat)&&(!onlyPhotos||!!getPhoto(r))&&(!onlyFavorite||favorites.has(r['代號'])));if(sort==='code')filtered.sort((a,b)=>a['代號'].localeCompare(b['代號'],'zh-Hant',{numeric:true}));if(sort==='company')filtered.sort((a,b)=>a['公司'].localeCompare(b['公司'],'zh-Hant'));if(sort==='date')filtered.sort((a,b)=>(a['開會日期']||'99.99').localeCompare(b['開會日期']||'99.99'));shown=0;$('cardGrid').innerHTML='';$('tableRows').innerHTML='';loadMore();$('visibleCount').textContent=filtered.length;$('currentCount').textContent=filtered.length.toLocaleString('zh-TW');$('empty').hidden=filtered.length!==0;updateControls()}
 function loadMore(){const next=filtered.slice(shown,shown+PAGE_SIZE);if(mode==='grid')$('cardGrid').insertAdjacentHTML('beforeend',next.map(makeCard).join(''));else $('tableRows').insertAdjacentHTML('beforeend',next.map(makeTableRow).join(''));shown+=next.length;$('loadMore').hidden=shown>=filtered.length;$('pageStatus').textContent=`（已顯示 ${shown} 筆）`}
