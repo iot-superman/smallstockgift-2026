@@ -212,6 +212,41 @@ a{color:#81dbf1}a:hover{color:#b3f0ff}
  .result-actions{gap:.25rem!important}
  .result-actions .btn{font-size:.7rem;padding:.32rem .35rem}
 }
+
+/* V4.7：放大圖關閉鈕緊貼「實際圖片」右上角，不再固定在瀏覽器右上角。
+   以圖片天然大小作為容器寬高，適用直式、橫式與各種比例。 */
+#giftLightbox .gift-lightbox-content{overflow:visible!important}
+#giftLightbox .gift-lightbox-photo-wrap{
+ position:relative!important;display:inline-flex!important;
+ align-items:center!important;justify-content:center!important;
+ width:fit-content!important;max-width:100%!important;
+ min-width:0!important;min-height:0!important;flex:0 1 auto!important;
+ margin:0 auto!important;
+}
+#giftLightbox .gift-lightbox-photo-wrap>img{
+ display:block!important;position:static!important;
+ max-width:100%!important;width:auto!important;height:auto!important;
+ max-height:calc(100dvh - 145px)!important;
+ min-width:0!important;min-height:0!important;object-fit:contain!important;
+}
+#giftLightboxClose{
+ position:absolute!important;top:0!important;right:0!important;
+ left:auto!important;bottom:auto!important;
+ transform:translate(38%,-38%)!important;
+ width:40px!important;height:40px!important;
+ background:#193850!important;border:1px solid #79a1bb!important;
+ box-shadow:0 2px 12px #0009!important;
+ z-index:5!important;touch-action:manipulation!important;
+}
+@media(max-width:767.98px){
+ #giftLightbox .gift-lightbox-photo-wrap>img{
+   max-height:calc(100dvh - 175px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+ }
+ #giftLightboxClose{
+   transform:translate(15%,-15%)!important;
+   width:42px!important;height:42px!important;
+ }
+}
 </style></head><body>
 <nav class="navbar navbar-dark"><div class="container"><a class="navbar-brand d-flex align-items-center gap-2 fw-bold mb-0" href="./index.html"><span class="brand-mark">🎁</span><span>小股民-2026</span></a><span class="badge text-bg-light">Bootstrap 5 · PWA</span></div></nav>
 <!-- V3.3：恢復原版四格統計卡，手機 2 欄、桌面 4 欄 -->
@@ -249,9 +284,12 @@ a{color:#81dbf1}a:hover{color:#b3f0ff}
 </main><nav class="sticky-bottom-nav d-md-none d-flex justify-content-around"><button type="button" class="btn btn-light btn-sm" id="mobileAll">🏠 全部</button><button type="button" class="btn btn-light btn-sm" id="mobilePhotos">📷 有照片</button><button type="button" class="btn btn-light btn-sm" id="mobileFav">★ 收藏</button><button type="button" class="btn btn-light btn-sm" id="mobileTop">↑ 頂端</button></nav>
 <!-- V3.6：實物照片點擊放大燈箱（卡片、表格共用） -->
 <dialog id="giftLightbox" aria-label="股東會贈品實物照片" aria-modal="true">
-  <button type="button" id="giftLightboxClose" class="gift-lightbox-close" aria-label="關閉放大圖片">×</button>
   <div class="gift-lightbox-content">
-    <img id="giftLightboxImg" alt="股東會紀念品實物照片" referrerpolicy="no-referrer">
+    <!-- V4.7：把關閉鈕放進圖片定位容器，桌面大螢幕也會緊貼實際照片右上角。 -->
+    <div class="gift-lightbox-photo-wrap">
+      <img id="giftLightboxImg" alt="股東會紀念品實物照片" referrerpolicy="no-referrer">
+      <button type="button" id="giftLightboxClose" class="gift-lightbox-close" aria-label="關閉放大圖片">×</button>
+    </div>
     <div id="giftLightboxTitle" class="gift-lightbox-title"></div>
   </div>
 </dialog>
