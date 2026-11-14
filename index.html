@@ -198,6 +198,20 @@ a{color:#81dbf1}a:hover{color:#b3f0ff}
    有實物照：卡片和表格都不顯示搜尋連結；載入失敗時才取消 hidden。 */
 .gift-image>.google-image-overlay[hidden],
 .google-image-link[hidden]{display:none!important}
+
+/* V4.5：把卡片／表格切換獨立放到匯出 CSV 左側。 */
+.result-toolbar{min-width:0}
+.result-actions{min-width:0;flex-wrap:nowrap}
+.result-actions .btn{white-space:nowrap}
+@media(max-width:575.98px){
+ .result-toolbar .result-count{width:100%}
+ .result-actions{width:100%;justify-content:flex-end}
+ .result-actions .btn{font-size:.78rem;padding:.37rem .48rem}
+}
+@media(max-width:355px){
+ .result-actions{gap:.25rem!important}
+ .result-actions .btn{font-size:.7rem;padding:.32rem .35rem}
+}
 </style></head><body>
 <nav class="navbar navbar-dark"><div class="container"><a class="navbar-brand d-flex align-items-center gap-2 fw-bold mb-0" href="./index.html"><span class="brand-mark">🎁</span><span>小股民-2026</span></a><span class="badge text-bg-light">Bootstrap 5 · PWA</span></div></nav>
 <!-- V3.3：恢復原版四格統計卡，手機 2 欄、桌面 4 欄 -->
@@ -216,8 +230,18 @@ a{color:#81dbf1}a:hover{color:#b3f0ff}
     <div class="col-6 col-lg-3"><div class="stat restored-stat"><div class="restored-number" id="voucherTotal">—</div><div class="restored-label">票券優惠總金額 <span class="restored-hint" title="僅依贈品文字中可辨識的票券面額估算，非實際可領金額">ⓘ</span></div></div></div>
   </div>
 </header>
-<main class="container my-3 my-md-4"><section class="filter-panel p-3 p-md-4 mb-3"><div class="row g-2 align-items-end"><div class="col-12 col-md-6"><label for="search" class="form-label fw-semibold small mb-1">搜尋股票／贈品</label><input id="search" class="form-control form-control-lg" type="search" placeholder="例如 5309、3306、不鏽鋼杯墊" autocomplete="off"></div><div class="col-6 col-md-3"><label class="form-label fw-semibold small mb-1" for="category">贈品分類</label><select id="category" class="form-select form-select-lg"><option value="all">全部分類</option><option value="voucher">禮券／商品卡</option><option value="food">食品／飲料</option><option value="home">家用／餐廚</option><option value="clean">清潔／保養</option><option value="bag">提袋／收納</option><option value="other">其他</option></select></div><div class="col-6 col-md-3"><label class="form-label fw-semibold small mb-1" for="sort">排序方式</label><select id="sort" class="form-select form-select-lg"><option value="original">來源清單順序</option><option value="code">股票代號</option><option value="company">公司名稱</option><option value="date">開會日期</option></select></div></div><div class="d-flex flex-wrap align-items-center gap-2 mt-3"><button type="button" class="btn btn-outline-primary btn-sm" id="onlyPhotos">📷 只看有照片</button><button type="button" class="btn btn-outline-warning btn-sm" id="onlyFavorite">★ 我的收藏</button><button type="button" class="btn btn-outline-secondary btn-sm" id="reset">清除篩選</button><div class="ms-auto btn-group btn-group-sm" role="group" aria-label="顯示方式"><button id="gridBtn" class="btn btn-selected" type="button">▦ 卡片</button><button id="tableBtn" class="btn btn-outline-secondary" type="button">☷ 表格</button></div></div><p id="sourceStatus" class="source-state text-secondary mt-3 mb-0" aria-live="polite">正在載入資料…</p></section>
-<div class="d-flex justify-content-between align-items-center mb-3"><div><strong id="visibleCount">765</strong> 筆符合條件 <span class="text-secondary small" id="pageStatus"></span></div><button id="exportBtn" class="btn btn-sm btn-outline-primary">匯出目前結果 CSV</button></div>
+<main class="container my-3 my-md-4"><section class="filter-panel p-3 p-md-4 mb-3"><div class="row g-2 align-items-end"><div class="col-12 col-md-6"><label for="search" class="form-label fw-semibold small mb-1">搜尋股票／贈品</label><input id="search" class="form-control form-control-lg" type="search" placeholder="例如 5309、3306、不鏽鋼杯墊" autocomplete="off"></div><div class="col-6 col-md-3"><label class="form-label fw-semibold small mb-1" for="category">贈品分類</label><select id="category" class="form-select form-select-lg"><option value="all">全部分類</option><option value="voucher">禮券／商品卡</option><option value="food">食品／飲料</option><option value="home">家用／餐廚</option><option value="clean">清潔／保養</option><option value="bag">提袋／收納</option><option value="other">其他</option></select></div><div class="col-6 col-md-3"><label class="form-label fw-semibold small mb-1" for="sort">排序方式</label><select id="sort" class="form-select form-select-lg"><option value="original">來源清單順序</option><option value="code">股票代號</option><option value="company">公司名稱</option><option value="date">開會日期</option></select></div></div><div class="d-flex flex-wrap align-items-center gap-2 mt-3"><button type="button" class="btn btn-outline-primary btn-sm" id="onlyPhotos">📷 只看有照片</button><button type="button" class="btn btn-outline-warning btn-sm" id="onlyFavorite">★ 我的收藏</button><button type="button" class="btn btn-outline-secondary btn-sm" id="reset">清除篩選</button></div><p id="sourceStatus" class="source-state text-secondary mt-3 mb-0" aria-live="polite">正在載入資料…</p></section>
+<!-- V4.5：視圖切換與匯出 CSV 同列，手機寬度不足時統計文字另起一列。 -->
+<div class="result-toolbar d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <div class="result-count"><strong id="visibleCount">765</strong> 筆符合條件 <span class="text-secondary small" id="pageStatus"></span></div>
+  <div class="result-actions d-flex align-items-center gap-2 ms-auto">
+    <div class="btn-group btn-group-sm" role="group" aria-label="顯示方式">
+      <button id="gridBtn" class="btn btn-selected" type="button">▦ 卡片</button>
+      <button id="tableBtn" class="btn btn-outline-secondary" type="button">☷ 表格</button>
+    </div>
+    <button id="exportBtn" class="btn btn-sm btn-outline-primary" type="button">匯出目前結果 CSV</button>
+  </div>
+</div>
 <div id="cardGrid" class="row row-cols-2 row-cols-sm-3 row-cols-lg-4 row-cols-xl-5 g-2 g-md-3"></div><div id="tableWrap" class="table-responsive bg-white rounded-4 border" hidden><table class="table table-hover mb-0"><thead class="table-light"><tr><th>實物照</th><th>股號／公司</th><th>紀念品</th><th>開會日</th><th>最後買進日</th><th>零股寄單</th><th>收藏</th></tr></thead><tbody id="tableRows"></tbody></table></div>
 <div class="text-center my-4"><button id="loadMore" class="btn btn-primary px-5" type="button">載入更多</button><div id="empty" class="text-secondary py-4" hidden>找不到符合條件的資料</div></div>
 <div id="installHint" class="alert alert-light border d-flex flex-column flex-md-row justify-content-between gap-2" role="note"><span>📱 <b>加入手機主畫面：</b>iPhone 請以 Safari 開啟 → 分享 →「加入主畫面」；Android Chrome 可使用選單中的「安裝應用程式」。</span><span class="small text-secondary">需部署於 HTTPS 或 localhost</span></div>
