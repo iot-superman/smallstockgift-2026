@@ -1,0 +1,18 @@
+{
+  "name": "小股塔-2026｜股東會紀念品",
+  "short_name": "小股塔-2026",
+  "description": "2026 股東會贈品查詢",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#071426",
+  "background_color": "#071426",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
