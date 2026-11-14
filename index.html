@@ -247,6 +247,25 @@ a{color:#81dbf1}a:hover{color:#b3f0ff}
    width:42px!important;height:42px!important;
  }
 }
+
+/* V4.8 桌面版：關閉 × 緊貼放大照片「下緣正中央」，不再位於照片右上角。
+   保持按鈕屬於實際照片容器，不會隨瀏覽器視窗寬度偏移。
+   手機版沿用 V4.7 右上角觸控配置。 */
+@media(min-width:768px){
+  #giftLightbox .gift-lightbox-photo-wrap{
+    margin-bottom:24px!important;
+  }
+  #giftLightboxClose{
+    position:absolute!important;
+    top:100%!important;
+    left:50%!important;
+    right:auto!important;
+    bottom:auto!important;
+    transform:translate(-50%,-50%)!important;
+    width:42px!important;
+    height:42px!important;
+  }
+}
 </style></head><body>
 <nav class="navbar navbar-dark"><div class="container"><a class="navbar-brand d-flex align-items-center gap-2 fw-bold mb-0" href="./index.html"><span class="brand-mark">🎁</span><span>小股民-2026</span></a><span class="badge text-bg-light">Bootstrap 5 · PWA</span></div></nav>
 <!-- V3.3：恢復原版四格統計卡，手機 2 欄、桌面 4 欄 -->
@@ -285,7 +304,7 @@ a{color:#81dbf1}a:hover{color:#b3f0ff}
 <!-- V3.6：實物照片點擊放大燈箱（卡片、表格共用） -->
 <dialog id="giftLightbox" aria-label="股東會贈品實物照片" aria-modal="true">
   <div class="gift-lightbox-content">
-    <!-- V4.7：把關閉鈕放進圖片定位容器，桌面大螢幕也會緊貼實際照片右上角。 -->
+    <!-- V4.8：關閉鈕定位於實際圖片容器；桌面置底部中央，手機維持右上角。 -->
     <div class="gift-lightbox-photo-wrap">
       <img id="giftLightboxImg" alt="股東會紀念品實物照片" referrerpolicy="no-referrer">
       <button type="button" id="giftLightboxClose" class="gift-lightbox-close" aria-label="關閉放大圖片">×</button>
