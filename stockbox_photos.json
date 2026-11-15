@@ -1,11 +1,26 @@
 {
-  "version": "2026-11-14",
+  "version": "2026-11-15",
   "description": "StockBox 2026 verified secondary gift photos; only records matching stock code and 2026 gift name",
   "photos": {
+    "1904": {
+      "gift": "春風官方購物商城AeSHOP折價券$200",
+      "url": "https://s3.ap-northeast-1.amazonaws.com/img.stockbox.com.tw/11453/01KTTVH0VCWD1BR2RT46C7AEH6.png",
+      "source": "https://www.stockbox.com.tw/stocks/1904"
+    },
+    "2303": {
+      "gift": "SNOOPY口袋保溫瓶",
+      "url": "https://s3.ap-northeast-1.amazonaws.com/img.stockbox.com.tw/4449/01KQ6JJ0FE82PQZPAM44JGAG15.jpg",
+      "source": "https://www.stockbox.com.tw/stocks/2303"
+    },
     "2880": {
       "gift": "咖波聯名限定雙盤組",
       "url": "https://s3.ap-northeast-1.amazonaws.com/img.stockbox.com.tw/4346/01KQ4A35NBSGSS93MZTSK992WE.jpg",
       "source": "https://www.stockbox.com.tw/stocks/2880"
+    },
+    "3481": {
+      "gift": "時尚輕巧隨手杯",
+      "url": "https://s3.ap-northeast-1.amazonaws.com/img.stockbox.com.tw/5003/01KQEDEYFTFF7AA4H8YDJY4KV2.png",
+      "source": "https://www.stockbox.com.tw/stocks/3481"
     }
   }
 }
